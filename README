@@ -1,0 +1,9 @@
+// (c) Copyright Morten Nielsen.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+To use this code, either explicitly use the SharpGIS.GZipWebClient class where you would normally new up a WebClient instance.
+Or you can automatically opt in for all existing WebClients by adding the following code: 
+WebRequest.RegisterPrefix("http://", SharpGIS.WebRequestCreator.GZip);
+WebRequest.RegisterPrefix("https://", SharpGIS.WebRequestCreator.GZip);
