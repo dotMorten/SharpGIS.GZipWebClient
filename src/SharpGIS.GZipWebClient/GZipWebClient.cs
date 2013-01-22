@@ -1,4 +1,4 @@
-﻿// (c) Copyright Morten Nielsen.
+// (c) Copyright Morten Nielsen.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -48,13 +48,12 @@ namespace SharpGIS
 		/// </returns>
 		protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
 		{
-			WebResponse response = null;
 			try
 			{
-				response = base.GetWebResponse(request, result);
+				WebResponse response = base.GetWebResponse(request, result);
 				if(!(response is GZipWebResponse) && //this would be the case if WebRequestCreator was also used
-				 (response.Headers[HttpRequestHeader.ContentEncoding] == "gzip"))
-					return new GZipWebResponse(response); //If gzipped response, uncompress
+				 (response.Headers[HttpRequestHeader.ContentEncoding] == "gzip") && response is HttpWebResponse)
+					return new GZipWebResponse(response as HttpWebResponse); //If gzipped response, uncompress
 				else
 					return response;
 			}
@@ -63,41 +62,68 @@ namespace SharpGIS
 				return null;
 			}
 		}
-		internal class GZipWebResponse : WebResponse
+		internal sealed class GZipWebResponse : HttpWebResponse
 		{
-			WebResponse response;
-			internal GZipWebResponse(WebResponse resp)
+			private readonly HttpWebResponse _response;
+			internal GZipWebResponse(HttpWebResponse resp)
 			{
-				response = resp;
+				_response = resp;
 			}
-
 			public override System.IO.Stream GetResponseStream()
 			{
-				return new SharpGIS.ZLib.GZipStream(response.GetResponseStream());
+				return new SharpGIS.ZLib.GZipStream(_response.GetResponseStream());
 			}
 			public override void Close()
 			{
-				response.Close();
+				_response.Close();
 			}
 			public override long ContentLength
 			{
-				get { return response.ContentLength; }
+				get { return _response.ContentLength; }
 			}
 			public override string ContentType
 			{
-				get { return response.ContentType; }
+				get { return _response.ContentType; }
 			}
 			public override WebHeaderCollection Headers
 			{
-				get { return response.Headers; }
+				get { return _response.Headers; }
 			}
 			public override Uri ResponseUri
 			{
-				get { return response.ResponseUri; }
+				get { return _response.ResponseUri; }
 			}
 			public override bool SupportsHeaders
 			{
-				get { return response.SupportsHeaders; }
+				get { return _response.SupportsHeaders; }
+			}
+			public override string Method
+			{
+				get
+				{
+					return _response.Method;
+				}
+			}
+			public override HttpStatusCode StatusCode
+			{
+				get
+				{
+					return _response.StatusCode;
+				}
+			}
+			public override string StatusDescription
+			{
+				get
+				{
+					return _response.StatusDescription;
+				}
+			}
+			public override CookieCollection Cookies
+			{
+				get
+				{
+					return _response.Cookies;
+				}
 			}
 		}
 	}
