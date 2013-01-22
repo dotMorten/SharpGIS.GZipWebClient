@@ -65,21 +65,28 @@ namespace SharpGIS
 		internal sealed class GZipWebResponse : HttpWebResponse
 		{
 			private readonly HttpWebResponse _response;
+			private readonly SharpGIS.GZipInflateStream _stream;
+
 			internal GZipWebResponse(HttpWebResponse resp)
 			{
 				_response = resp;
+				_stream = new GZipInflateStream(_response.GetResponseStream());
 			}
 			public override System.IO.Stream GetResponseStream()
 			{
-				return new SharpGIS.ZLib.GZipStream(_response.GetResponseStream());
+				return _stream;
 			}
 			public override void Close()
 			{
 				_response.Close();
+				_stream.Close();
 			}
 			public override long ContentLength
 			{
-				get { return _response.ContentLength; }
+				get
+				{
+					return _stream.Length;
+				}
 			}
 			public override string ContentType
 			{
