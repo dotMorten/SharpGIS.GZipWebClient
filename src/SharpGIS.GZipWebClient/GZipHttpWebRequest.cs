@@ -73,6 +73,93 @@ namespace SharpGIS
 			set { _internalWebRequest.Headers = value; }
 		}
 
+		public override bool SupportsCookieContainer
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).SupportsCookieContainer;
+				else
+					return base.SupportsCookieContainer;
+			}
+		}
+
+		public override CookieContainer CookieContainer
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).CookieContainer;
+				else
+					return base.CookieContainer;
+			}
+			set
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					(_internalWebRequest as HttpWebRequest).CookieContainer = value;
+				else
+					throw new NotSupportedException();
+			}
+		}
+
+		public override bool AllowAutoRedirect
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).AllowAutoRedirect;
+				else
+					return base.AllowAutoRedirect;
+			}
+			set
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					(_internalWebRequest as HttpWebRequest).AllowAutoRedirect = value;
+				else
+					throw new NotSupportedException();
+			}
+		}
+
+		public override bool HaveResponse
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).HaveResponse;
+				else
+					return base.HaveResponse;
+			}
+		}
+
+		public override bool AllowReadStreamBuffering
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).AllowReadStreamBuffering;
+				else
+					return base.AllowReadStreamBuffering;
+			}
+			set
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					(_internalWebRequest as HttpWebRequest).AllowReadStreamBuffering = value;
+				else
+					throw new NotSupportedException();
+			}
+		}
+
+		public override IWebRequestCreate CreatorInstance
+		{
+			get
+			{
+				if (_internalWebRequest is HttpWebRequest)
+					return (_internalWebRequest as HttpWebRequest).CreatorInstance;
+				else
+					return base.CreatorInstance;
+			}
+		}
+
 		public override void Abort()
 		{
 			_internalWebRequest.Abort();
