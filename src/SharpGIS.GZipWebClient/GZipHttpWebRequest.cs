@@ -1,4 +1,4 @@
-﻿// (c) Copyright Morten Nielsen.
+// (c) Copyright Morten Nielsen.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -15,78 +15,78 @@ namespace SharpGIS
 	/// <remarks>
 	/// This class is only used by the <see cref="WebRequestCreator"/>.
 	/// </remarks>
-	internal class GZipHttpWebRequest : HttpWebRequest
+	internal sealed class GZipHttpWebRequest : HttpWebRequest
 	{
-		private System.Net.WebRequest internalWebRequest;
+		private readonly System.Net.WebRequest _internalWebRequest;
 
 		public GZipHttpWebRequest(Uri uri)
 		{
-			internalWebRequest = System.Net.WebRequest.CreateHttp(uri);
+			_internalWebRequest = System.Net.WebRequest.CreateHttp(uri);
 			Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
 		}
 
 		public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
 		{
-			return internalWebRequest.BeginGetRequestStream(callback, state);
+			return _internalWebRequest.BeginGetRequestStream(callback, state);
 		}
 
 		public override System.IO.Stream EndGetRequestStream(IAsyncResult asyncResult)
 		{
-			return internalWebRequest.EndGetRequestStream(asyncResult);
+			return _internalWebRequest.EndGetRequestStream(asyncResult);
 		}
 
 		public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
 		{
-			return internalWebRequest.BeginGetResponse(callback, state);
+			return _internalWebRequest.BeginGetResponse(callback, state);
 		}
 
 		public override WebResponse EndGetResponse(IAsyncResult asyncResult)
 		{
-			var response = internalWebRequest.EndGetResponse(asyncResult);
-			if (response.Headers[HttpRequestHeader.ContentEncoding] == "gzip")
-				return new SharpGIS.GZipWebClient.GZipWebResponse(response);
+			var response = _internalWebRequest.EndGetResponse(asyncResult);
+			if (response.Headers[HttpRequestHeader.ContentEncoding] == "gzip" && response is HttpWebResponse)
+				return new SharpGIS.GZipWebClient.GZipWebResponse(response as HttpWebResponse);
 			else
 				return response;
 		}
 
 		public override string Method
 		{
-			get { return internalWebRequest.Method; }
-			set { internalWebRequest.Method = value; }
+			get { return _internalWebRequest.Method; }
+			set { _internalWebRequest.Method = value; }
 		}
 
 		public override string ContentType
 		{
-			get { return internalWebRequest.ContentType; }
-			set { internalWebRequest.ContentType = value; }
+			get { return _internalWebRequest.ContentType; }
+			set { _internalWebRequest.ContentType = value; }
 		}
 
 		public override ICredentials Credentials
 		{
-			get { return internalWebRequest.Credentials; }
-			set { internalWebRequest.Credentials = value; }
+			get { return _internalWebRequest.Credentials; }
+			set { _internalWebRequest.Credentials = value; }
 		}
 
 		public override WebHeaderCollection Headers
 		{
-			get { return internalWebRequest.Headers; }
-			set { internalWebRequest.Headers = value; }
+			get { return _internalWebRequest.Headers; }
+			set { _internalWebRequest.Headers = value; }
 		}
 
 		public override void Abort()
 		{
-			internalWebRequest.Abort();
+			_internalWebRequest.Abort();
 		}
 
 		public override bool UseDefaultCredentials
 		{
-			get { return internalWebRequest.UseDefaultCredentials; }
-			set { internalWebRequest.UseDefaultCredentials = value; }
+			get { return _internalWebRequest.UseDefaultCredentials; }
+			set { _internalWebRequest.UseDefaultCredentials = value; }
 		}
 
 		public override Uri RequestUri
 		{
-			get { return internalWebRequest.RequestUri; }
+			get { return _internalWebRequest.RequestUri; }
 		}
 	}
 }
