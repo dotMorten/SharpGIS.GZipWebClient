@@ -28,7 +28,15 @@ namespace SharpGIS
 
 		private void ProcessStream()
 		{
-			if ((0x1f != _deflatedStream.ReadByte()) || // ID1
+			int firstByte = _deflatedStream.ReadByte();
+
+			if (firstByte == -1)
+			{
+				_inflatedStream = new MemoryStream();
+				return;
+			}
+
+			if ((0x1f != firstByte) || // ID1
 			    (0x8b != _deflatedStream.ReadByte()) || // ID2
 			    (8 != _deflatedStream.ReadByte())) // CM (8 == deflate)
 			{
