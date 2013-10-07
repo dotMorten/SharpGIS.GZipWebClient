@@ -23,6 +23,7 @@ namespace SharpGIS
 		{
 			_internalWebRequest = System.Net.WebRequest.CreateHttp(uri);
 			Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+			Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch";
 		}
 
 		public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
