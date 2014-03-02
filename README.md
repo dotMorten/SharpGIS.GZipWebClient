@@ -1,5 +1,12 @@
 ###GZip Compression for Windows Phone WebClient
 
+UPDATE: THIS PROJECT HAS BEEN DISCONTINUED. PLEASE USE THE OFFICIAL MICROSOFT PROVIDED HTTP CLIENT LIBRARY: https://www.nuget.org/packages/Microsoft.Net.Http
+
+Now that Microsoft finally provides GZip compression for Windows Phone, I encourage you to use their official nuget package instead.
+
+======================
+
+
 (c) Copyright Morten Nielsen.
 
 This source is subject to the Microsoft Public License (Ms-PL).
